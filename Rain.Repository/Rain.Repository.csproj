@@ -71,6 +71,10 @@
       <Project>{9002D207-7951-4059-8C25-A4291EA45675}</Project>
       <Name>Rain.BaseRepository</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rain.Common\Rain.Common.csproj">
+      <Project>{44E2A202-2D3E-444B-86B8-2A19B5DB55FE}</Project>
+      <Name>Rain.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rain.Entities\Rain.Entities.csproj">
       <Project>{02e0f229-ac34-4bdc-a01b-994a81af0051}</Project>
       <Name>Rain.Entities</Name>
