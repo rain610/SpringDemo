@@ -16,6 +16,7 @@ namespace Rain.Common
         string address;
         JsonSerializerSettings jsonConfig = new JsonSerializerSettings() { ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore, NullValueHandling = NullValueHandling.Ignore };
         ConnectionMultiplexer connectionMultiplexer;
+        private static readonly string RedisConnectionString = ConfigurationManager.ConnectionStrings["RedisExchangeHosts"].ConnectionString;
         IDatabase database;
 
         class CacheObject<T>
@@ -28,10 +29,9 @@ namespace Rain.Common
         public Redis()
         {
             this.address = ConfigurationManager.AppSettings["RedisServer"];
-
             if (this.address == null || string.IsNullOrWhiteSpace(this.address.ToString()))
                 throw new ApplicationException("配置文件中未找到RedisServer的有效配置");
-            connectionMultiplexer = ConnectionMultiplexer.Connect(address);
+            connectionMultiplexer = ConnectionMultiplexer.Connect(RedisConnectionString);
             database = connectionMultiplexer.GetDatabase();
             //sub = connectionMultiplexer.GetSubscriber();
         }
