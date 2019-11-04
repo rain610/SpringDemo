@@ -33,8 +33,12 @@ namespace WebApplication2.Controllers
         public void Login(LoginVisualEntity info)
         {
             string sessionID = Guid.NewGuid().ToString();
-            System.Web.HttpContext.Current.Response.Cookies.Set(new HttpCookie(cookieName, sessionID));
+            var cookie = new HttpCookie(cookieName, sessionID);
+            cookie.Expires = DateTime.Now.AddMinutes(5);
+            cookie.HttpOnly = true;
+            System.Web.HttpContext.Current.Response.Cookies.Set(cookie);
             SessionStateManage.SetLogin(sessionID, info);
+            HttpContext.Response.Redirect("~/Home/Index");
         }
         
     }

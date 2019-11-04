@@ -31,6 +31,7 @@ namespace WebApplication2.Controllers
             {
                 UserSession = new LoginVisualEntity { Password = loginVisualEntity.Password, UserName = loginVisualEntity.UserName };
                 Login(UserSession);
+
             }
             return Json(new { IsSuccess = true, Message = "" });
         }
