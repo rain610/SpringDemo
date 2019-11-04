@@ -1,4 +1,6 @@
-﻿using Rain.Entities;
+﻿using Newtonsoft.Json;
+using Rain.Common.LogHelper;
+using Rain.Entities;
 using Rain.Repository;
 using System;
 using System.Collections.Generic;
@@ -38,7 +40,7 @@ namespace WebApplication2.Controllers
             cookie.HttpOnly = true;
             System.Web.HttpContext.Current.Response.Cookies.Set(cookie);
             SessionStateManage.SetLogin(sessionID, info);
-            HttpContext.Response.Redirect("~/Home/Index");
+            CommonLogging.Info(JsonConvert.SerializeObject(info));
         }
         
     }

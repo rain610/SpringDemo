@@ -1,4 +1,6 @@
-﻿using Rain.Entities;
+﻿using Newtonsoft.Json;
+using Rain.Common.LogHelper;
+using Rain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +33,6 @@ namespace WebApplication2.Controllers
             {
                 UserSession = new LoginVisualEntity { Password = loginVisualEntity.Password, UserName = loginVisualEntity.UserName };
                 Login(UserSession);
-
             }
             return Json(new { IsSuccess = true, Message = "" });
         }

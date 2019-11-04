@@ -24,6 +24,10 @@ namespace WebApplication2
                 //    isAuthorized = true;
                 //}
             }
+            if (isAuthorized)
+            {
+                httpContext.Response.Redirect("~/Home/Index");
+            }
             return isAuthorized;
         }
 
