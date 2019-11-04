@@ -87,6 +87,7 @@
     <Compile Include="NotCopyAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Redis.cs" />
+    <Compile Include="RedisHelper\RedisConnectionAssignHelper.cs" />
     <Compile Include="RedisHelper\RedisConnectionHelper.cs" />
     <Compile Include="RedisHelper\RedisHelper.cs" />
   </ItemGroup>

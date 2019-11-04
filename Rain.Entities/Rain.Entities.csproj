@@ -53,6 +53,7 @@
     <Compile Include="Table\AddressEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Table\DocumentCenterFileEntity.cs" />
+    <Compile Include="Visual\LoginVisualEntity.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rain.BaseEntities\Rain.BaseEntities.csproj">

@@ -3,6 +3,7 @@ using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -72,6 +73,50 @@ namespace Rain.Common.RedisHelper
             return redisKeys.Select(redisKey => (RedisKey)redisKey).ToArray();
         }
 
+        static HashEntry[] ToHash<T>(T obj, bool isIncludNull = false)
+        {
+            PropertyInfo[] properties = obj.GetType().GetProperties();
+
+            return isIncludNull
+                ? properties.Select(x =>
+                {
+                    var tempValue = x.GetValue(obj);
+                    return new HashEntry(x.Name, tempValue == null ? string.Empty : tempValue.ToString());
+                }).ToArray()
+                : properties.Where(x => x.GetValue(obj) != null).Select(x => new HashEntry(x.Name, x.GetValue(obj).ToString())).ToArray();
+        }
+
+        static T ToEntity<T>(HashEntry[] hashEntries)
+        {
+            Type t = typeof(T);
+            PropertyInfo[] properties = t.GetProperties();
+            var obj = Activator.CreateInstance(typeof(T));
+            foreach (var property in properties)
+            {
+                HashEntry entry = hashEntries.FirstOrDefault(g => g.Name.ToString().Equals(property.Name));
+                if (entry.Equals(new HashEntry())) continue;
+
+                object value = null;
+                if (!property.PropertyType.IsGenericType)
+                {
+                    value = Convert.ChangeType(entry.Value.ToString(), property.PropertyType);
+                }
+                else
+                {
+                    Type genericTypeDefinition = property.PropertyType.GetGenericTypeDefinition();
+                    if (genericTypeDefinition == typeof(Nullable<>))
+                    {
+                        if (entry.Value.HasValue)
+                        {
+                            value = Convert.ChangeType(entry.Value.ToString(), Nullable.GetUnderlyingType(property.PropertyType));
+                        }
+                    }
+                }
+
+                property.SetValue(obj, value);
+            }
+            return (T)obj;
+        }
         #endregion 辅助方法
 
         #region String
@@ -504,6 +549,17 @@ namespace Rain.Common.RedisHelper
             });
         }
 
+        public bool HashSet<T>(string key, T t) 
+        {
+            key = AddSysCustomKey(key);
+            return Do(db =>
+            {
+                var val = ToHash<T>(t);
+                db.HashSet(key, val);
+                return true;
+            });
+        }
+
         /// <summary>
         /// 移除hash中的某值
         /// </summary>
@@ -543,6 +599,16 @@ namespace Rain.Common.RedisHelper
             {
                 string value = db.HashGet(key, dataKey);
                 return ConvertObj<T>(value);
+            });
+        }
+
+        public T HashGet<T>(string key)
+        {
+            key = AddSysCustomKey(key);
+            return Do(db =>
+            {
+                var value = db.HashGetAll(key);
+                return ToEntity<T>(value);
             });
         }
 
@@ -619,6 +685,25 @@ namespace Rain.Common.RedisHelper
             {
                 string json = ConvertJson(t);
                 return db.HashSetAsync(key, dataKey, json);
+            });
+        }
+
+        /// <summary>
+        /// 存储数据到hash表
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="dataKey"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public async Task<bool> HashSetAsync<T>(string key, T t)
+        {
+            key = AddSysCustomKey(key);
+            return await Do( async db =>
+            {
+                var val = ToHash<T>(t);
+                await db.HashSetAsync(key, val);
+                return true;
             });
         }
 

@@ -1,0 +1,55 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+@model Rain.Entities.LoginVisualEntity
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+        <style>
+            html, body {
+                width:100%;
+                height:100%;
+            }
+        </style>
+    </head>
+    <body>
+        <div style="flex:2;height:30%;">
+
+        </div>
+        <div style="flex:1">
+            <div>
+                <div>
+                    登录名：
+                    <input type="text" name="username" id="username" />
+                </div>
+                <div>
+                    密码：
+                    <input type="password" name="password" id="password" />
+                </div>
+            </div>
+            <div>
+                <input type="button" name="btnlogin" id="btnlogin" title="登录" value="登录" style="width:4rem;" />
+            </div>
+        </div>
+        <div style="flex:2;height:30%;">
+
+        </div>
+    </body>
+</html>
+<script>
+    $("#btnlogin").click(function () {
+        var loginObj = new Object();
+        loginObj.UserName = $("#username").val();
+        loginObj.Password = $("#password").val();
+        $.post("LoginPost", loginObj, function (res) {
+
+        });
+    });
+</script>
