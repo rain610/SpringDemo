@@ -7,7 +7,7 @@ using System.Web.Mvc;
 
 namespace WebApplication2.Controllers
 {
-    [AuthorizeFilter]
+    //[AuthorizeFilter]
     public class HomeController : Controller
     {
         public ActionResult Index()
@@ -31,6 +31,11 @@ namespace WebApplication2.Controllers
             ViewBag.Message = "Your contact page.";
 
             return View();
+        }
+
+        public ActionResult ExportTestWord()
+        {
+            return File(new AddressRepository().Test(), "application/msword", "Test" + ".docx");
         }
     }
 }
